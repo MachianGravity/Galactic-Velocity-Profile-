@@ -56,7 +56,22 @@
     .btn{padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
     .btn.secondary{background:#f1f5f9}
     .btn.primary{background:var(--accent);color:#fff}
-
+    
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      background: var(--accent);
+      border-radius: 6px;
+      color: #fff;
+      text-decoration: none;
+    }
+    
+    .download-btn svg {
+      display: block;
+    }
+    
     @media (max-width:800px){.wrap{flex-direction:column}.sidebar{width:100%;height:auto}.main{padding:12px}.modal-content{width:98%;height:92%}}
   </style>
 </head>
@@ -196,9 +211,13 @@ function buildGrid(list){
     const dl = document.createElement('a');
     dl.href = p;
     dl.className = 'download-btn';
-    dl.textContent = 'Download';
     dl.setAttribute('download', '');
-
+    dl.title = 'Download ' + filenameFromPath(p);
+    dl.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12v8m0 0l-4-4m4 4l4-4M12 4v8" />
+    </svg>`;
+    
     meta.appendChild(name);
     meta.appendChild(dl);
 
