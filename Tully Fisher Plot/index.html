@@ -41,7 +41,7 @@
     .preview iframe{width:100%;height:100%;border:0;display:block}
     .preview .overlay{position:absolute;inset:0;background:transparent;cursor:pointer}
     .meta{margin-top:8px;display:flex;justify-content:space-between;align-items:center;width: 100%;}
-    .filename{font-size:13px;color:#0b1222;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .filename{font-size:13px;color:#0b1222;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:85%}
     .muted{color:var(--muted);font-size:13px}
     .topbar{display:flex;gap:12px;align-items:center}
 
@@ -51,8 +51,10 @@
     .modal-content{width:90%;max-width:1100px;height:85%;background:var(--card);border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,0.4);overflow:hidden;display:flex;flex-direction:column}
     .modal-header{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eef2f7}
     .modal-title{font-size:15px}
-    .modal-body{flex:1;display:flex}
+    .modal-body{flex:1;display:flex;position:relative} /* position:relative so overlay can be positioned */
     .modal-body iframe{width:100%;height:100%;border:0}
+    /* overlay that captures clicks on top of the iframe */
+    .modal-click-close{position:absolute;inset:0;z-index:5;background:transparent;cursor:pointer}
     .modal-actions{padding:10px 14px;border-top:1px solid #eef2f7;display:flex;justify-content:flex-end;gap:8px}
     .btn{padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
     .btn.secondary{background:#f1f5f9}
@@ -98,7 +100,7 @@
     <main class="main">
       <section>
         <h2 id="folderTitle">Tully Fisher Plot</h2>
-<a href="https://github.com/MachianGravity/Galactic-Velocity-Profile-/edit/main/Tully%20Fisher%20Plot" style="display: block; margin-bottom: 12px;" target="_blank">MachianGravity/Galactic-Velocity-Profile-/edit/main/Tully_Fisher_Plot</a>
+        <a href="https://github.com/MachianGravity/Galactic-Velocity-Profile-/edit/main/Tully%20Fisher%20Plot" style="display: block; margin-bottom: 12px;" target="_blank">MachianGravity/Galactic-Velocity-Profile-/edit/main/Tully_Fisher_Plot</a>
         <p class="lead" id="folderDesc">The figure illustrates the relationship between mass discrepancy  to four variables: $r$, $v/r$, $a_N$, and $\lambda r$. These plots are based on a dataset comprising 2385 data points from the SPARC galaxies. None of the plots exhibit a very prominent correlation. Specifically, the top two plots display relatively weaker correlations and appear more dispersed, whereas the bottom two plots show relatively stronger correlations. 
       </section>
 
@@ -118,6 +120,8 @@
         </div>
       </div>
       <div class="modal-body">
+        <!-- overlay on top of iframe to capture clicks and close the modal -->
+        <div class="modal-click-close" title="Click to close preview"></div>
         <iframe id="modalFrame" src="" title="PDF preview"></iframe>
       </div>
       <div class="modal-actions">
@@ -142,12 +146,13 @@
     const fileListEl = document.getElementById('fileList');
     const gridEl = document.getElementById('grid');
     const searchEl = document.getElementById('search');
-    const togglePreviewBtn = document.getElementById('togglePreview');
+    const togglePreviewBtn = document.getElementById('togglePreview'); // may be null if button not present
     const modal = document.getElementById('modal');
     const modalFrame = document.getElementById('modalFrame');
     const modalTitle = document.getElementById('modalTitle');
     const modalClose = document.getElementById('modalClose');
     const modalDownload = document.getElementById('modalDownload');
+    const modalClickClose = document.querySelector('.modal-click-close');
     let previewsEnabled = true;
 
     function filenameFromPath(p){ return p.split('/').pop(); }
@@ -183,47 +188,47 @@
       });
     }
 
-function buildGrid(list){
-  gridEl.innerHTML = '';
-  list.forEach(p => {
-    const card = document.createElement('div');
-    card.className = 'card';
+    function buildGrid(list){
+      gridEl.innerHTML = '';
+      list.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'card';
 
-    const preview = document.createElement('div');
-    preview.className = 'preview';
+        const preview = document.createElement('div');
+        preview.className = 'preview';
 
-    // Use the corresponding PNG image for the preview
-    const img = document.createElement('img');
-    const imgName = p.replace('.pdf', '.png'); // Make sure names match exactly
-    img.src = imgName;
-    img.alt = filenameFromPath(p);
-    img.addEventListener('click', () => openModal(p));
-    preview.appendChild(img);
+        // Use the corresponding PNG image for the preview (if you have them)
+        const img = document.createElement('img');
+        const imgName = p.replace('.pdf', '.png'); // Make sure names match exactly
+        img.src = imgName;
+        img.alt = filenameFromPath(p);
+        img.addEventListener('click', () => openModal(p));
+        preview.appendChild(img);
 
-    const meta = document.createElement('div');
-    meta.className = 'meta';
-    const name = document.createElement('div');
-    name.className = 'filename';
-    name.textContent = filenameFromPath(p);
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        const name = document.createElement('div');
+        name.className = 'filename';
+        name.textContent = filenameFromPath(p);
 
-    const dl = document.createElement('a');
-    dl.href = p;
-    dl.className = 'download-btn';
-    dl.setAttribute('download', '');
-    dl.title = 'Download ' + filenameFromPath(p);
-    dl.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12v8m0 0l-4-4m4 4l4-4M12 4v8" />
-    </svg>`;
-    
-    meta.appendChild(name);
-    meta.appendChild(dl);
+        const dl = document.createElement('a');
+        dl.href = p;
+        dl.className = 'download-btn';
+        dl.setAttribute('download', '');
+        dl.title = 'Download ' + filenameFromPath(p);
+        dl.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12v8m0 0l-4-4m4 4l4-4M12 4v8" />
+        </svg>`;
 
-    card.appendChild(preview);
-    card.appendChild(meta);
-    gridEl.appendChild(card);
-  });
-}
+        meta.appendChild(name);
+        meta.appendChild(dl);
+
+        card.appendChild(preview);
+        card.appendChild(meta);
+        gridEl.appendChild(card);
+      });
+    }
 
     function refresh(list){
       buildSidebar(list);
@@ -244,24 +249,34 @@ function buildGrid(list){
       modalFrame.src = '';
     }
 
+    // initial render
     refresh(pdfFiles);
 
+    // filter/search
     searchEl.addEventListener('input', (e)=>{
       const q = e.target.value.trim().toLowerCase();
       const filtered = pdfFiles.filter(p => filenameFromPath(p).toLowerCase().includes(q));
       refresh(filtered);
     });
 
-    togglePreviewBtn.addEventListener('click', ()=>{
-      previewsEnabled = !previewsEnabled;
-      document.querySelectorAll('.preview iframe').forEach(iframe => {
-        iframe.style.display = previewsEnabled ? 'block' : 'none';
+    // togglePreview guard: only attach listener if element exists
+    if (togglePreviewBtn) {
+      togglePreviewBtn.addEventListener('click', ()=>{
+        previewsEnabled = !previewsEnabled;
+        document.querySelectorAll('.preview iframe').forEach(iframe => {
+          iframe.style.display = previewsEnabled ? 'block' : 'none';
+        });
+        togglePreviewBtn.textContent = previewsEnabled ? 'Hide Previews' : 'Show Previews';
       });
-      togglePreviewBtn.textContent = previewsEnabled ? 'Hide Previews' : 'Show Previews';
-    });
+    }
 
-    modalClose.addEventListener('click', closeModal);
+    // Close handlers
+    if (modalClose) modalClose.addEventListener('click', closeModal);
+    // clicking the overlay outside modal-content
     modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+    // clicking the transparent overlay on top of iframe closes modal
+    if (modalClickClose) modalClickClose.addEventListener('click', closeModal);
+    // escape key
     window.addEventListener('keydown', (e) => { if(e.key==='Escape' && modal.classList.contains('open')) closeModal(); });
   </script>
 </body>
