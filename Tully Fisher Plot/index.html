@@ -19,7 +19,23 @@
     .list a:hover{background:#f1f5ff;border-color:#e6eefc}
     .download-btn{background:var(--accent);color:#fff;padding:6px 10px;border-radius:6px;text-decoration:none}
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,2fr));gap:16px}
-    .card{background:var(--card);padding:10px;border-radius:12px;box-shadow:0 4px 12px rgba(12,18,31,0.04);min-height:420px;display:flex;flex-direction:column}
+    
+    .card {
+      background: var(--card);
+      padding: 10px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(12,18,31,0.04);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .preview img {
+      width: 100%;
+      height: auto; /* scales proportionally */
+      border-radius: 8px;
+      cursor: pointer;
+    }
     .preview{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:8px;border:1px solid #eef2f7;background:#fafbff;cursor:pointer;position:relative;height:320px}
     .preview iframe{width:100%;height:100%;border:0;display:block}
     .preview .overlay{position:absolute;inset:0;background:transparent;cursor:pointer}
@@ -154,48 +170,42 @@
       });
     }
 
-    function buildGrid(list){
-      gridEl.innerHTML = '';
-      list.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'card';
+function buildGrid(list){
+  gridEl.innerHTML = '';
+  list.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'card';
 
-        const preview = document.createElement('div');
-        preview.className = 'preview';
-        preview.setAttribute('data-file', p);
+    const preview = document.createElement('div');
+    preview.className = 'preview';
+    
+    // Assuming you have a PNG/JPG for each PDF
+    const img = document.createElement('img');
+    const imgName = p.replace('.pdf', '.png'); // change extension if needed
+    img.src = imgName;
+    img.alt = filenameFromPath(p);
+    img.addEventListener('click', ()=> openModal(p));
+    preview.appendChild(img);
 
-        const iframe = document.createElement('iframe');
-        iframe.src = p + '#page=1&zoom=page-width';
-        iframe.setAttribute('loading','lazy');
-        iframe.setAttribute('aria-hidden','true');
-        preview.appendChild(iframe);
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    const name = document.createElement('div');
+    name.className = 'filename';
+    name.textContent = filenameFromPath(p);
+    const dl = document.createElement('a');
+    dl.href = p;
+    dl.className = 'download-btn';
+    dl.textContent = 'Download';
+    dl.setAttribute('download','');
 
-        // overlay to capture clicks
-        const overlay = document.createElement('div');
-        overlay.className = 'overlay';
-        overlay.title = 'Open larger preview';
-        overlay.addEventListener('click', () => openModal(p));
-        preview.appendChild(overlay);
+    meta.appendChild(name);
+    meta.appendChild(dl);
 
-        const meta = document.createElement('div');
-        meta.className = 'meta';
-        const name = document.createElement('div');
-        name.className = 'filename';
-        name.textContent = filenameFromPath(p);
-        const dl = document.createElement('a');
-        dl.href = p;
-        dl.className = 'download-btn';
-        dl.textContent = 'Download';
-        dl.setAttribute('download','');
-
-        meta.appendChild(name);
-        meta.appendChild(dl);
-
-        card.appendChild(preview);
-        card.appendChild(meta);
-        gridEl.appendChild(card);
-      });
-    }
+    card.appendChild(preview);
+    card.appendChild(meta);
+    gridEl.appendChild(card);
+  });
+}
 
     function refresh(list){
       buildSidebar(list);
