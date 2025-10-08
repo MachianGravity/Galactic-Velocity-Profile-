@@ -31,8 +31,8 @@
     }
     
     .preview img {
-      width: 100%;
-      height: auto; /* scales proportionally */
+      width: 100%;   /* scale image to card width */
+      height: auto;  /* maintain aspect ratio */
       border-radius: 8px;
       cursor: pointer;
     }
@@ -178,13 +178,13 @@ function buildGrid(list){
 
     const preview = document.createElement('div');
     preview.className = 'preview';
-    
-    // Assuming you have a PNG/JPG for each PDF
+
+    // Use the corresponding PNG image for the preview
     const img = document.createElement('img');
-    const imgName = p.replace('.pdf', '.png'); // change extension if needed
+    const imgName = p.replace('.pdf', '.png'); // Make sure names match exactly
     img.src = imgName;
     img.alt = filenameFromPath(p);
-    img.addEventListener('click', ()=> openModal(p));
+    img.addEventListener('click', () => openModal(p));
     preview.appendChild(img);
 
     const meta = document.createElement('div');
@@ -192,11 +192,12 @@ function buildGrid(list){
     const name = document.createElement('div');
     name.className = 'filename';
     name.textContent = filenameFromPath(p);
+
     const dl = document.createElement('a');
     dl.href = p;
     dl.className = 'download-btn';
     dl.textContent = 'Download';
-    dl.setAttribute('download','');
+    dl.setAttribute('download', '');
 
     meta.appendChild(name);
     meta.appendChild(dl);
