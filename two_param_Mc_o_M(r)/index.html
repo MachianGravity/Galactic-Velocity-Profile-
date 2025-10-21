@@ -108,11 +108,16 @@
 
     <main class="main">
       <section>
-        <h2 id="folderTitle">Tully Fisher Plot</h2>
-        <a href="https://github.com/MachianGravity/Galactic-Velocity-Profile-/edit/main/Tully%20Fisher%20Plot" style="display: block; margin-bottom: 12px;" target="_blank">MachianGravity/Galactic-Velocity-Profile-/edit/main/Tully_Fisher_Plot</a>
-        <p class="lead" id="folderDesc">The figure illustrates the relationship between mass discrepancy  to four variables: $r$, $v/r$, $a_N$, and $\lambda r$. These plots are based on a dataset comprising 2385 data points from the SPARC galaxies. None of the plots exhibit a very prominent correlation. Specifically, the top two plots display relatively weaker correlations and appear more dispersed, whereas the bottom two plots show relatively stronger correlations. 
+        <h2 id="folderTitle">Two parameter MCMC Plots</h2>
+        <a href="https://github.com/MachianGravity/Galactic-Velocity-Profile-/tree/main/two_param_Mc_o_M(r)" style="display: block; margin-bottom: 12px;" target="_blank">MachianGravity/Galactic-Velocity-Profile-/edit/main/Tully_Fisher_Plot</a>
+        <p class="lead" id="folderDesc">The illustration portrays the distributions of $\lambda^{-1}$ and $M_c$, their correlation, and the relationship of $\chi^2$ with these parameters, 
+          alongside $a_0 = \frac{GM_c}{\lambda^{-2}}$. In the figure, $\lambda^{-1}$ is scaled in kiloparsecs ($\rm kpc$) and $M_c$ is scaled in solar masses ($M_\odot$). Notably, 
+          the value of $a_0$ for the best-fit $\chi^2$ is approximately on the order of $10^{-8} \, \rm cm/s^2$. The value of $R_{max}$ corresponds to the radius of the last velocity 
+          data point for each galaxy. Importantly, $\lambda^{-1}$ aligns roughly with the order of $R_{max}$ </p>
+          
+          
         <p>Display:</p>
-  $$\nabla \cdot \mathbf{E} = \frac{\rho}{\varepsilon_0}$$
+  $$v^2=\frac{GM}{r}\left[1+\left(\sqrt{\frac{M_c}{M(r)}} - 1\right)\left(1-e^{-\lambda r}\left(1+\lambda r\right)\right)\right]$$
       </section>
 
       <section style="margin-top:12px">
