@@ -1,1 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PDF Image Index — Repository</title>
+  <style>
+    :root{--bg:#f6f8fb;--card:#fff;--accent:#61baed;--muted:#6b7280}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto,"Helvetica Neue", Arial;color:#0f172a;background:var(--bg)}
+    .wrap{display:flex;height:100vh;gap:20px}
+    .sidebar{width:300px;background:linear-gradient(180deg,#ffffff 0%, #f8fafc 100%);box-shadow:0 6px 18px rgba(12,18,31,0.06);padding:18px 16px;overflow:auto}
+    .main{flex:1;padding:18px;overflow:auto}
+    h1{margin:6px 0 6px;font-size:20px}
+    p.lead{margin:0 0 12px;color:var(--muted)}
+    .search{margin:12px 0}
+    .search input{width:100%;padding:8px 10px;border-radius:8px;border:1px solid #e6e9ef}
+    .list{margin-top:12px}
+    .list a{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;text-decoration:none;color:inherit;margin-bottom:6px;border:1px solid transparent}
+    .list a:hover{background:#f1f5ff;border-color:#e6eefc}
+    .download-btn{background: #61baed;
+    box-shadow: 1px 1px 4px -1px #00000073;color:#fff;padding:6px 10px;border-radius:6px;text-decoration:none}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,2fr));gap:16px}
+    
+    .card {
+      background: var(--card);
+      padding: 10px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(12,18,31,0.04);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .preview img {
+      width: 100%;   /* scale image to card width */
+      height: auto;  /* maintain aspect ratio */
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .preview{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:8px;border:1px solid #eef2f7;background:#fafbff;cursor:pointer;position:relative;height:320px}
+    .preview iframe{width:100%;height:100%;border:0;display:block}
+    .preview .overlay{position:absolute;inset:0;background:transparent;cursor:pointer}
+    .meta{margin-top:8px;display:flex;justify-content:space-between;align-items:center;width: 100%;}
+    .filename{font-size:13px;color:#0b1222;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:85%}
+    .muted{color:var(--muted);font-size:13px}
+    .topbar{display:flex;gap:12px;align-items:center}
 
+    /* Modal styles */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);z-index:9999}
+    .modal.open{display:flex}
+    .modal-content{width:90%;max-width:1100px;height:85%;background:var(--card);border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,0.4);overflow:hidden;display:flex;flex-direction:column}
+    .modal-header{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eef2f7}
+    .modal-title{font-size:15px}
+    .modal-body{flex:1;display:flex;position:relative} /* position:relative so overlay can be positioned */
+    .modal-body iframe{width:100%;height:100%;border:0}
+    /* overlay that captures clicks on top of the iframe */
+    .modal-click-close{position:absolute;inset:0;z-index:5;background:transparent;cursor:pointer}
+    .modal-actions{padding:10px 14px;border-top:1px solid #eef2f7;display:flex;justify-content:flex-end;gap:8px}
+    .btn{padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
+    .btn.secondary{background:#f1f5f9}
+    .btn.primary{background:var(--accent);color:#fff}
+    
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      background: var(--accent);
+      border-radius: 6px;
+      color: #fff;
+      text-decoration: none;
+    }
+    
+    .download-btn svg {
+      display: block;
+    }
+    
+    @media (max-width:800px){.wrap{flex-direction:column}.sidebar{width:100%;height:auto}.main{padding:12px}.modal-content{width:98%;height:92%}}
+  </style>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+</head>
+<body>
+  <div class="wrap">
+    <aside class="sidebar">
+      <div class="topbar">
+        <div>
+          <h1>PDF Images — Repository</h1>
+          <a href="https://machiangravity.github.io/Galactic-Velocity-Profile-/"> Home </a>
+          <p class="lead">A browsable index of PDF images stored in this repository. Use the sidebar links to download individual files.</p>
+        </div>
+      </div>
+
+      <div class="search">
+        <input id="search" placeholder="Filter filenames..." />
+      </div>
+
+      <div class="list" id="fileList"></div>
+
+    </aside>
+
+    <main class="main">
+      <section>
+        <h2 id="folderTitle">Two parameter MCMC Plots (note that $M(r)$ in $K$ term)</h2>
+        <a href="https://github.com/MachianGravity/Galactic-Velocity-Profile-/tree/main/two_param_Mc_o_M(r)" style="display: block; margin-bottom: 12px;" target="_blank">https://github.com/MachianGravity/Galactic-Velocity-Profile-/tree/main/two_param_Mc_o_M(r)</a>
+        <p class="lead" id="folderDesc">The illustration portrays the distributions of $\lambda^{-1}$ and $M_c$, their correlation, and the relationship of $\chi^2$ with these parameters, 
+          alongside $a_0 = \frac{GM_c}{\lambda^{-2}}$. In the figure, $\lambda^{-1}$ is scaled in kiloparsecs ($\rm kpc$) and $M_c$ is scaled in solar masses ($M_\odot$). Notably, 
+          the value of $a_0$ for the best-fit $\chi^2$ is approximately on the order of $10^{-8} \, \rm cm/s^2$. The value of $R_{max}$ corresponds to the radius of the last velocity 
+          data point for each galaxy. Importantly, $\lambda^{-1}$ aligns roughly with the order of $R_{max}$ </p>
+          
+          
+        <p>Display:</p>
+  $$v^2=\frac{GM}{r}\left[1+\left(\sqrt{\frac{M_c}{M(r)}} - 1\right)\left(1-e^{-\lambda r}\left(1+\lambda r\right)\right)\right]$$
+      </section>
+
+      <section style="margin-top:12px">
+        <div id="grid" class="grid"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal for large preview -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">Preview</div>
+        <div>
+          <button id="modalClose" class="btn secondary">Close</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <!-- overlay on top of iframe to capture clicks and close the modal -->
+        <div class="modal-click-close" title="Click to close preview"></div>
+        <iframe id="modalFrame" src="" title="PDF preview"></iframe>
+      </div>
+      <div class="modal-actions">
+        <a id="modalDownload" class="btn primary" href="#" download>Download</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const pdfFiles = [
+"D512d2.pdf", "D564d8.pdf", "D631d7.pdf", "DDO064.pdf", "DDO154.pdf", "DDO161.pdf", "DDO168.pdf", "DDO170.pdf", "ESO079dG014.pdf", "ESO116dG012.pdf", "ESO444dG084.pdf", "ESO563dG021.pdf", "F561d1.pdf", "F563d1.pdf", "F563dV1.pdf", "F563dV2.pdf", "F565dV2.pdf", "F568d1.pdf", "F568d3.pdf", "F568dV1.pdf", "F571d8.pdf", "F571dV1.pdf", "F574d1.pdf", "F574d2.pdf", "F579dV1.pdf", "F583d1.pdf", "F583d4.pdf", "IC2574.pdf", "IC4202.pdf", "It is empty.pdf", "KK98d251.pdf", "NGC0024.pdf", "NGC0055.pdf", "NGC0100.pdf", "NGC0247.pdf", "NGC0289.pdf", "NGC0300.pdf", "NGC0801.pdf", "NGC0891.pdf", "NGC1003.pdf", "NGC1090.pdf", "NGC1705.pdf", "NGC2366.pdf", "NGC2403.pdf", "NGC2841.pdf", "NGC2903.pdf", "NGC2915.pdf", "NGC2955.pdf", "NGC2976.pdf", "NGC2998.pdf", "NGC3109.pdf", "NGC3198.pdf", "NGC3521.pdf", "NGC3726.pdf", "NGC3741.pdf", "NGC3769.pdf", "NGC3877.pdf", "NGC3893.pdf", "NGC3917.pdf", "NGC3949.pdf", "NGC3953.pdf", "NGC3972.pdf", "NGC3992.pdf", "NGC4010.pdf", "NGC4013.pdf", "NGC4051.pdf", "NGC4068.pdf", "NGC4085.pdf", "NGC4088.pdf", "NGC4100.pdf", "NGC4138.pdf", "NGC4157.pdf", "NGC4183.pdf", "NGC4214.pdf", "NGC4217.pdf", "NGC4389.pdf", "NGC4559.pdf", "NGC5005.pdf", "NGC5033.pdf", "NGC5055.pdf", "NGC5371.pdf", "NGC5585.pdf", "NGC5907.pdf", "NGC5985.pdf", "NGC6015.pdf", "NGC6503.pdf", "NGC6674.pdf", "NGC6789.pdf", "NGC7331.pdf", "NGC7793.pdf", "NGC7814.pdf", "P170.pdf", "P171.pdf", "P172.pdf", "PGC51017.pdf", "UGC00128.pdf", "UGC00191.pdf", "UGC00634.pdf", "UGC00731.pdf", "UGC01230.pdf", "UGC01281.pdf", "UGC02023.pdf", "UGC02259.pdf", "UGC02455.pdf", "UGC02487.pdf", "UGC02885.pdf", "UGC02916.pdf", "UGC02953.pdf", "UGC03205.pdf", "UGC03546.pdf", "UGC03580.pdf", "UGC04278.pdf", "UGC04305.pdf", "UGC04325.pdf", "UGC04483.pdf", "UGC04499.pdf", "UGC05005.pdf", "UGC05253.pdf", "UGC05414.pdf", "UGC05716.pdf", "UGC05721.pdf", "UGC05750.pdf", "UGC05764.pdf", "UGC05829.pdf", "UGC05918.pdf", "UGC05986.pdf", "UGC05999.pdf", "UGC06399.pdf", "UGC06446.pdf", "UGC06614.pdf", "UGC06628.pdf", "UGC06667.pdf", "UGC06786.pdf", "UGC06787.pdf", "UGC06818.pdf", "UGC06917.pdf", "UGC06923.pdf", "UGC06930.pdf", "UGC06973.pdf", "UGC06983.pdf", "UGC07089.pdf", "UGC07125.pdf", "UGC07151.pdf", "UGC07232.pdf", "UGC07261.pdf", "UGC07323.pdf", "UGC07399.pdf", "UGC07524.pdf", "UGC07559.pdf", "UGC07577.pdf", "UGC07603.pdf", "UGC07608.pdf", "UGC07690.pdf", "UGC07866.pdf", "UGC08286.pdf", "UGC08490.pdf", "UGC08550.pdf", "UGC08699.pdf", "UGC08837.pdf", "UGC09037.pdf", "UGC09133.pdf", "UGC09992.pdf", "UGC10310.pdf", "UGC11455.pdf", "UGC11820.pdf", "UGC12506.pdf", "UGC12632.pdf", "UGCA281.pdf", "UGCA442.pdf"
+    ];
+
+    const fileListEl = document.getElementById('fileList');
+    const gridEl = document.getElementById('grid');
+    const searchEl = document.getElementById('search');
+    const togglePreviewBtn = document.getElementById('togglePreview'); // may be null if button not present
+    const modal = document.getElementById('modal');
+    const modalFrame = document.getElementById('modalFrame');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalClose = document.getElementById('modalClose');
+    const modalDownload = document.getElementById('modalDownload');
+    const modalClickClose = document.querySelector('.modal-click-close');
+    let previewsEnabled = true;
+
+    function filenameFromPath(p){ return p.split('/').pop(); }
+
+    function makeDownloadLink(path){
+      const a = document.createElement('a');
+      a.href = path;
+      a.download = '';
+      a.textContent = filenameFromPath(path);
+      a.title = 'Download ' + filenameFromPath(path);
+      return a;
+    }
+
+    function buildSidebar(list){
+      fileListEl.innerHTML = '';
+      if(list.length === 0){ fileListEl.innerHTML = '<div class="muted">No files matched.</div>'; return; }
+      list.forEach(p => {
+        const container = document.createElement('div');
+        container.style.display = 'flex';
+        container.style.justifyContent = 'space-between';
+        container.style.alignItems = 'center';
+
+        const a = makeDownloadLink(p);
+        const btn = document.createElement('a');
+        btn.href = p;
+        btn.className = 'download-btn';
+        btn.textContent = 'Download';
+        btn.setAttribute('download','');
+
+        container.appendChild(a);
+        container.appendChild(btn);
+        fileListEl.appendChild(container);
+      });
+    }
+
+    function buildGrid(list){
+      gridEl.innerHTML = '';
+      list.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        const preview = document.createElement('div');
+        preview.className = 'preview';
+
+        // Use the corresponding PNG image for the preview (if you have them)
+        const img = document.createElement('img');
+        const imgName = p.replace('.pdf', '.png'); // Make sure names match exactly
+        img.src = imgName;
+        img.alt = filenameFromPath(p);
+        img.addEventListener('click', () => openModal(p));
+        preview.appendChild(img);
+
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        const name = document.createElement('div');
+        name.className = 'filename';
+        name.textContent = filenameFromPath(p);
+
+        const dl = document.createElement('a');
+        dl.href = p;
+        dl.className = 'download-btn';
+        dl.setAttribute('download', '');
+        dl.title = 'Download ' + filenameFromPath(p);
+        dl.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12v8m0 0l-4-4m4 4l4-4M12 4v8" />
+        </svg>`;
+
+        meta.appendChild(name);
+        meta.appendChild(dl);
+
+        card.appendChild(preview);
+        card.appendChild(meta);
+        gridEl.appendChild(card);
+      });
+    }
+
+    function refresh(list){
+      buildSidebar(list);
+      buildGrid(list);
+    }
+
+    function openModal(filePath){
+      modalTitle.textContent = filenameFromPath(filePath);
+      modalFrame.src = filePath + '#page=1&zoom=auto';
+      modalDownload.href = filePath;
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+    }
+
+    function closeModal(){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden','true');
+      modalFrame.src = '';
+    }
+
+    // initial render
+    refresh(pdfFiles);
+
+    // filter/search
+    searchEl.addEventListener('input', (e)=>{
+      const q = e.target.value.trim().toLowerCase();
+      const filtered = pdfFiles.filter(p => filenameFromPath(p).toLowerCase().includes(q));
+      refresh(filtered);
+    });
+
+    // togglePreview guard: only attach listener if element exists
+    if (togglePreviewBtn) {
+      togglePreviewBtn.addEventListener('click', ()=>{
+        previewsEnabled = !previewsEnabled;
+        document.querySelectorAll('.preview iframe').forEach(iframe => {
+          iframe.style.display = previewsEnabled ? 'block' : 'none';
+        });
+        togglePreviewBtn.textContent = previewsEnabled ? 'Hide Previews' : 'Show Previews';
+      });
+    }
+
+    // Close handlers
+    if (modalClose) modalClose.addEventListener('click', closeModal);
+    // clicking the overlay outside modal-content
+    modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+    // clicking the transparent overlay on top of iframe closes modal
+    if (modalClickClose) modalClickClose.addEventListener('click', closeModal);
+    // escape key
+    window.addEventListener('keydown', (e) => { if(e.key==='Escape' && modal.classList.contains('open')) closeModal(); });
+  </script>
+</body>
+</html>
