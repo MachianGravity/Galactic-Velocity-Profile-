@@ -1,1 +1,296 @@
 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PDF Image Index — Repository</title>
+  <style>
+    :root{--bg:#f6f8fb;--card:#fff;--accent:#61baed;--muted:#6b7280}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto,"Helvetica Neue", Arial;color:#0f172a;background:var(--bg)}
+    .wrap{display:flex;height:100vh;gap:20px}
+    .sidebar{width:300px;background:linear-gradient(180deg,#ffffff 0%, #f8fafc 100%);box-shadow:0 6px 18px rgba(12,18,31,0.06);padding:18px 16px;overflow:auto}
+    .main{flex:1;padding:18px;overflow:auto}
+    h1{margin:6px 0 6px;font-size:20px}
+    p.lead{margin:0 0 12px;color:var(--muted)}
+    .search{margin:12px 0}
+    .search input{width:100%;padding:8px 10px;border-radius:8px;border:1px solid #e6e9ef}
+    .list{margin-top:12px}
+    .list a{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;text-decoration:none;color:inherit;margin-bottom:6px;border:1px solid transparent}
+    .list a:hover{background:#f1f5ff;border-color:#e6eefc}
+    .download-btn{background: #61baed;
+    box-shadow: 1px 1px 4px -1px #00000073;color:#fff;padding:6px 10px;border-radius:6px;text-decoration:none}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,2fr));gap:16px}
+    
+    .card {
+      background: var(--card);
+      padding: 10px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(12,18,31,0.04);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .preview img {
+      width: 100%;   /* scale image to card width */
+      height: auto;  /* maintain aspect ratio */
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .preview{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:8px;border:1px solid #eef2f7;background:#fafbff;cursor:pointer;position:relative;height:320px}
+    .preview iframe{width:100%;height:100%;border:0;display:block}
+    .preview .overlay{position:absolute;inset:0;background:transparent;cursor:pointer}
+    .meta{margin-top:8px;display:flex;justify-content:space-between;align-items:center;width: 100%;}
+    .filename{font-size:13px;color:#0b1222;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:85%}
+    .muted{color:var(--muted);font-size:13px}
+    .topbar{display:flex;gap:12px;align-items:center}
+
+    /* Modal styles */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);z-index:9999}
+    .modal.open{display:flex}
+    .modal-content{width:90%;max-width:1100px;height:85%;background:var(--card);border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,0.4);overflow:hidden;display:flex;flex-direction:column}
+    .modal-header{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eef2f7}
+    .modal-title{font-size:15px}
+    .modal-body{flex:1;display:flex;position:relative} /* position:relative so overlay can be positioned */
+    .modal-body iframe{width:100%;height:100%;border:0}
+    /* overlay that captures clicks on top of the iframe */
+    .modal-click-close{position:absolute;inset:0;z-index:5;background:transparent;cursor:pointer}
+    .modal-actions{padding:10px 14px;border-top:1px solid #eef2f7;display:flex;justify-content:flex-end;gap:8px}
+    .btn{padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
+    .btn.secondary{background:#f1f5f9}
+    .btn.primary{background:var(--accent);color:#fff}
+    
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      background: var(--accent);
+      border-radius: 6px;
+      color: #fff;
+      text-decoration: none;
+    }
+    
+    .download-btn svg {
+      display: block;
+    }
+    
+    @media (max-width:800px){.wrap{flex-direction:column}.sidebar{width:100%;height:auto}.main{padding:12px}.modal-content{width:98%;height:92%}}
+  </style>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+</head>
+<body>
+  <div class="wrap">
+    <aside class="sidebar">
+      <div class="topbar">
+        <div>
+          <h1>PDF Images — Repository</h1>
+          <a href="https://machiangravity.github.io/Galactic-Velocity-Profile-/"> Home </a>
+          <p class="lead">A browsable index of PDF images stored in this repository. Use the sidebar links to download individual files.</p>
+        </div>
+      </div>
+
+      <div class="search">
+        <input id="search" placeholder="Filter filenames..." />
+      </div>
+
+      <div class="list" id="fileList"></div>
+
+    </aside>
+
+    <main class="main">
+      <section>
+        <h2 id="folderTitle">Model velocity vs Observed velocity plot</h2>
+        <a href="https://github.com/MachianGravity/Galactic-Velocity-Profile-/tree/main/Velocity_Velocity_Comparison/" style="display: block; margin-bottom: 12px;" target="_blank">https://github.com/MachianGravity/Galactic-Velocity-Profile-/tree/main/Velocity_Velocity_Comparison/</a>
+        <p class="lead" id="folderDesc">Along the X-axis I have plotted the observed velocities, and along the Y-axis I have shown the velocities predicted by the different models. If a model predicts the data accurately, its points should lie on the diagonal dotted reference line. In several cases, the curves deviate significantly from this line. However, for most galaxies, the Machian gravity predictions lie much closer to the diagonal compared to the other two models.</p>
+        <p class="lead" id="folderDesc">NFW and Machian gravity each have two free parameters, while MOND uses only one. I also observe that at smaller radii, both the NFW profile and MOND slightly tend to overpredict the velocities, whereas the Machian gravity results remain closer to the diagonal reference line.</p>
+        <p>MOND Formula:</p>
+        $$a_{\text{obs}}=\frac{a_{\text{bar}}}{1-e^{-\sqrt{a_{\text{bar}}/a_{0}}}}\;\qquad\qquad\qquad\qquad   \text{Parameter: }\qquad  a_0$$
+
+        <p>Machian Gravity Formula:</p>
+        $$v^2=\frac{GM}{r}\left[1+\left(\sqrt{\frac{M_c}{M}} - 1\right)\left(1-e^{-\lambda r}\left(1+\lambda r\right)\right)\right]\;\qquad\qquad\qquad\qquad   \text{Parameter:} \qquad M_c, \lambda^{-1}$$
+
+        
+        <p>NFW Profile:</p>
+        $$v^2 = 4\pi G \rho_s  r_s^3 (log(1 + x) - x/(1 + x))/ r\;\qquad\qquad\qquad\qquad   \text{where}\qquad  x=\frac{r}{r_s} \;\qquad\qquad\qquad\qquad   \text{Parameter:}\qquad r_s, \rho_s$$
+
+      </section>
+
+      <section style="margin-top:12px">
+        <div id="grid" class="grid"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal for large preview -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">Preview</div>
+        <div>
+          <button id="modalClose" class="btn secondary">Close</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <!-- overlay on top of iframe to capture clicks and close the modal -->
+        <div class="modal-click-close" title="Click to close preview"></div>
+        <iframe id="modalFrame" src="" title="PDF preview"></iframe>
+      </div>
+      <div class="modal-actions">
+        <a id="modalDownload" class="btn primary" href="#" download>Download</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const pdfFiles = [
+"1.pdf", "10.pdf", "101.pdf", "103.pdf", "104.pdf", "105.pdf", "106.pdf", "107.pdf", "108.pdf", "109.pdf", "11.pdf", "110.pdf", "111.pdf", "112.pdf", "113.pdf", "114.pdf", "115.pdf", "116.pdf", "117.pdf", "118.pdf", "119.pdf", "12.pdf", "120.pdf", "121.pdf", "122.pdf", "123.pdf", "124.pdf", "125.pdf", "126.pdf", "127.pdf", "128.pdf", "129.pdf", "13.pdf", "130.pdf", "131.pdf", "132.pdf", "133.pdf", "134.pdf", "135.pdf", "136.pdf", "137.pdf", "138.pdf", "139.pdf", "14.pdf", "140.pdf", "141.pdf", "142.pdf", "143.pdf", "144.pdf", "145.pdf", "146.pdf", "147.pdf", "148.pdf", "149.pdf", "15.pdf", "150.pdf", "151.pdf", "152.pdf", "153.pdf", "154.pdf", "155.pdf", "156.pdf", "157.pdf", "158.pdf", "159.pdf", "16.pdf", "160.pdf", "161.pdf", "162.pdf", "163.pdf", "164.pdf", "165.pdf", "166.pdf", "167.pdf", "168.pdf", "169.pdf", "17.pdf", "170.pdf", "171.pdf", "172.pdf", "173.pdf", "18.pdf", "19.pdf", "2.pdf", "20.pdf", "21.pdf", "22.pdf", "23.pdf", "24.pdf", "25.pdf", "26.pdf", "27.pdf", "28.pdf", "29.pdf", "3.pdf", "30.pdf", "31.pdf", "32.pdf", "33.pdf", "34.pdf", "35.pdf", "36.pdf", "37.pdf", "38.pdf", "39.pdf", "4.pdf", "40.pdf", "41.pdf", "42.pdf", "43.pdf", "44.pdf", "45.pdf", "46.pdf", "47.pdf", "48.pdf", "49.pdf", "5.pdf", "50.pdf", "51.pdf", "52.pdf", "53.pdf", "54.pdf", "55.pdf", "56.pdf", "57.pdf", "58.pdf", "59.pdf", "6.pdf", "60.pdf", "61.pdf", "62.pdf", "63.pdf", "64.pdf", "65.pdf", "66.pdf", "67.pdf", "68.pdf", "69.pdf", "7.pdf", "70.pdf", "71.pdf", "72.pdf", "73.pdf", "74.pdf", "75.pdf", "76.pdf", "77.pdf", "78.pdf", "79.pdf", "8.pdf", "80.pdf", "81.pdf", "82.pdf", "83.pdf", "84.pdf", "85.pdf", "86.pdf", "87.pdf", "88.pdf", "89.pdf", "9.pdf", "90.pdf", "91.pdf", "92.pdf", "93.pdf", "94.pdf", "95.pdf", "96.pdf", "97.pdf", "98.pdf", "99.pdf"
+    ];
+
+    const fileListEl = document.getElementById('fileList');
+    const gridEl = document.getElementById('grid');
+    const searchEl = document.getElementById('search');
+    const togglePreviewBtn = document.getElementById('togglePreview'); // may be null if button not present
+    const modal = document.getElementById('modal');
+    const modalFrame = document.getElementById('modalFrame');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalClose = document.getElementById('modalClose');
+    const modalDownload = document.getElementById('modalDownload');
+    const modalClickClose = document.querySelector('.modal-click-close');
+    let previewsEnabled = true;
+
+    function filenameFromPath(p){ return p.split('/').pop(); }
+
+    function makeDownloadLink(path){
+      const a = document.createElement('a');
+      a.href = path;
+      a.download = '';
+      a.textContent = filenameFromPath(path);
+      a.title = 'Download ' + filenameFromPath(path);
+      return a;
+    }
+
+    function buildSidebar(list){
+      fileListEl.innerHTML = '';
+      if(list.length === 0){ fileListEl.innerHTML = '<div class="muted">No files matched.</div>'; return; }
+      list.forEach(p => {
+        const container = document.createElement('div');
+        container.style.display = 'flex';
+        container.style.justifyContent = 'space-between';
+        container.style.alignItems = 'center';
+
+        const a = makeDownloadLink(p);
+        const btn = document.createElement('a');
+        btn.href = p;
+        btn.className = 'download-btn';
+        btn.textContent = 'Download';
+        btn.setAttribute('download','');
+
+        container.appendChild(a);
+        container.appendChild(btn);
+        fileListEl.appendChild(container);
+      });
+    }
+
+    function buildGrid(list){
+      gridEl.innerHTML = '';
+      list.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        const preview = document.createElement('div');
+        preview.className = 'preview';
+
+        // Use the corresponding PNG image for the preview (if you have them)
+        const img = document.createElement('img');
+        const imgName = p.replace('.pdf', '.png'); // Make sure names match exactly
+        img.src = imgName;
+        img.alt = filenameFromPath(p);
+        img.addEventListener('click', () => openModal(p));
+        preview.appendChild(img);
+
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        const name = document.createElement('div');
+        name.className = 'filename';
+        name.textContent = filenameFromPath(p);
+
+        const dl = document.createElement('a');
+        dl.href = p;
+        dl.className = 'download-btn';
+        dl.setAttribute('download', '');
+        dl.title = 'Download ' + filenameFromPath(p);
+        dl.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12v8m0 0l-4-4m4 4l4-4M12 4v8" />
+        </svg>`;
+
+        meta.appendChild(name);
+        meta.appendChild(dl);
+
+        card.appendChild(preview);
+        card.appendChild(meta);
+        gridEl.appendChild(card);
+      });
+    }
+
+    function refresh(list){
+      buildSidebar(list);
+      buildGrid(list);
+    }
+
+    function openModal(filePath){
+      modalTitle.textContent = filenameFromPath(filePath);
+      modalFrame.src = filePath + '#page=1&zoom=auto';
+      modalDownload.href = filePath;
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+    }
+
+    function closeModal(){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden','true');
+      modalFrame.src = '';
+    }
+
+    // initial render
+    refresh(pdfFiles);
+
+    // filter/search
+    searchEl.addEventListener('input', (e)=>{
+      const q = e.target.value.trim().toLowerCase();
+      const filtered = pdfFiles.filter(p => filenameFromPath(p).toLowerCase().includes(q));
+      refresh(filtered);
+    });
+
+    // togglePreview guard: only attach listener if element exists
+    if (togglePreviewBtn) {
+      togglePreviewBtn.addEventListener('click', ()=>{
+        previewsEnabled = !previewsEnabled;
+        document.querySelectorAll('.preview iframe').forEach(iframe => {
+          iframe.style.display = previewsEnabled ? 'block' : 'none';
+        });
+        togglePreviewBtn.textContent = previewsEnabled ? 'Hide Previews' : 'Show Previews';
+      });
+    }
+
+    // Close handlers
+    if (modalClose) modalClose.addEventListener('click', closeModal);
+    // clicking the overlay outside modal-content
+    modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+    // clicking the transparent overlay on top of iframe closes modal
+    if (modalClickClose) modalClickClose.addEventListener('click', closeModal);
+    // escape key
+    window.addEventListener('keydown', (e) => { if(e.key==='Escape' && modal.classList.contains('open')) closeModal(); });
+  </script>
+</body>
+</html>
