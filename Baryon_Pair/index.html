@@ -10,7 +10,7 @@
     :root{--bg:#f6f8fb;--card:#fff;--accent:#61baed;--muted:#6b7280}
     html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto,"Helvetica Neue", Arial;color:#0f172a;background:var(--bg)}
     .wrap{display:flex;height:100vh;gap:20px}
-    .sidebar{width:300px;background:linear-gradient(180deg,#ffffff 0%, #f8fafc 100%);box-shadow:0 6px 18px rgba(12,18,31,0.06);padding:18px 16px;overflow:auto}
+    .sidebar{width:300px;background:linear-gradient(180deg,#ffffff 0%, #f8fafc 100%);box-shadow:0 6px 18px rgba(12,18,31,0.06);padding:18px 25px;overflow:auto;overflow-x: hidden;}
     .main{flex:1;padding:18px;overflow:auto}
     h1{margin:6px 0 6px;font-size:20px}
     p.lead{margin:0 0 12px;color:var(--muted)}
@@ -18,9 +18,9 @@
     .search input{width:100%;padding:8px 10px;border-radius:8px;border:1px solid #e6e9ef}
     .list{margin-top:12px}
     .list a{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;text-decoration:none;color:inherit;margin-bottom:6px;border:1px solid transparent}
-    .list a:hover{background:#f1f5ff;border-color:#e6eefc}
-    .download-btn{background: #61baed;
-    box-shadow: 1px 1px 4px -1px #00000073;color:#fff;padding:6px 10px;border-radius:6px;text-decoration:none}
+    .list :hover{background:#f1f5ff !important;}
+    .download-btn{
+    color:#fff;padding:6px 10px;border-radius:6px;text-decoration:none}
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,2fr));gap:16px}
     
     .card {
@@ -67,7 +67,6 @@
       align-items: center;
       justify-content: center;
       padding: 4px;
-      background: var(--accent);
       border-radius: 6px;
       color: #fff;
       text-decoration: none;
@@ -96,7 +95,6 @@
         <div>
           <h1>PDF Images — Repository</h1>
           <a href="https://machiangravity.github.io/Galactic-Velocity-Profile-/"> Home </a>
-          <p class="lead">A browsable index of PDF images stored in this repository. Use the sidebar links to download individual files.</p>
         </div>
       </div>
 
@@ -110,12 +108,12 @@
 
     <main class="main">
       <section>
-        <h2 id="folderTitle">Model velocity vs Observed velocity plot</h2>
-        <a href="https://github.com/MachianGravity/Galactic-Velocity-Profile-/tree/main/Velocity_Profiles/" style="display: block; margin-bottom: 12px;" target="_blank">https://github.com/MachianGravity/Galactic-Velocity-Profile-/tree/main/Velocity_Profiles/</a>
-        <p class="lead" id="folderDesc">The illustration depicts the Machian Gravity (MG) fitting applied to the SPARC galaxy dataset.
-                  The green line with error bars, show the observed velocities from the SPARC dataset. The blue dotted curve represents the velocity 
-                  computed using Newtonian mechanics based on the baryonic matter, while the solid red curve reflects the velocity computed using the Machian gravity model.
-                  I have also shown the velocity profile using MOND and the NFW model in yellow and violet dashed curve to provide a comperative analysis. 
+        <h2 id="folderTitle">Galaxy pair where the Newtonian velocities from baryon match</h2>
+        <a href="https://github.com/MachianGravity/Galactic-Velocity-Profile-/tree/main/Baryon_Pair" style="display: block; margin-bottom: 12px;" target="_blank">https://github.com/MachianGravity/Galactic-Velocity-Profile-/tree/main/Baryon_Pair</a>
+        <p class="lead" id="folderDesc">The plot shows several galaxy pairs for which the observed velocity profiles closely match each other. The dotted lines represent the velocities calculated 
+          using Newtonian dynamics, based solely on the baryonic mass of the galaxies. In most cases, when the observed velocity profiles agree, the corresponding velocities derived from the baryonic 
+          component also agree. In a few instances, discrepancies are present; however, visual inspection suggests that these can be resolved by modest adjustments to the disk and bulge mass-to-light 
+          ratios. If dark matter were a completely independent component, such a correspondence would not be expected. 
         </p>
         
         $$a_{\text{obs}}=\frac{a_{\text{bar}}}{1-e^{-\sqrt{a_{\text{bar}}/a_{0}}}}\;\qquad\qquad\qquad\qquad   \text{Parameter: }\qquad  a_0$$
@@ -191,7 +189,8 @@
         container.style.display = 'flex';
         container.style.justifyContent = 'space-between';
         container.style.alignItems = 'center';
-
+        container.style.background = 'white';
+        
         const a = makeDownloadLink(p);
         const btn = document.createElement('a');
         btn.href = p;
