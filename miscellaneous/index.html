@@ -99,7 +99,22 @@
       <section>
         <h2 id="folderTitle">Miscellaneous Plot</h2>
         <a href="https://github.com/MachianGravity/Galactic-Velocity-Profile-/tree/main/miscellaneous" style="display: block; margin-bottom: 12px;" target="_blank">https://github.com/MachianGravity/Galactic-Velocity-Profile-/tree/main/miscellaneous</a>
-        <p class="lead" id="folderDesc">The figure illustrates the relationship between mass discrepancy  to four variables: $r$, $v/r$, $a_N$, and $\lambda r$. These plots are based on a dataset comprising 2385 data points from the SPARC galaxies. None of the plots exhibit a very prominent correlation. Specifically, the top two plots display relatively weaker correlations and appear more dispersed, whereas the bottom two plots show relatively stronger correlations. 
+        <p class="lead" id="folderDesc">
+          AIC Plot: This figure compares three models— MG, MOND, and the NFW dark matter profile—using the Akaike Information Criterion (AIC), which balances goodness of fit and model complexity. 
+          MG and the NFW profile each have two free parameters, while MOND has one. The color of each bar represents $\mathrm{AIC}_{\mathrm{MOND}}-\mathrm{AIC}_{\mathrm{MG}}$, and the bar 
+          height represents $\mathrm{AIC}_{\mathrm{NFW}}-\mathrm{AIC}_{\mathrm{MG}}$. Values are smoothly truncated within $\pm 10$ using a $\tanh$ function, as differences larger than 
+          $\sim 7$–$8$ indicate a decisive preference. Galaxies are sorted by $\mathrm{AIC}_{\mathrm{MOND}}-\mathrm{AIC}_{\mathrm{MG}}$ to produce a gradual color variation. Red indicates 
+          a better fit for MG relative to MOND, while blue indicates the opposite. Similarly, positive bar heights indicate a better fit for MG relative to the NFW profile. The $\pm 2$ lines 
+          mark the threshold below which models are considered statistically equivalent.
+
+          Acceleration Plot: In the top panel, I plot the MOND acceleration scale and sort the galaxies by their corresponding value of $a_0^\text{MOND}$. Aside from a few galaxies at the very beginning and 
+          end of the sequence, the acceleration scale is nearly constant across the sample, although it does show a gradual variation. The bars are color-coded according to 
+          $a_0^\text{MG} = \frac{GM_c}{\lambda^{-2}}$. This illustrates that the acceleration scales predicted by the two models do not necessarily match for every galaxy. That is, the $n$‑th galaxy 
+          in the MOND-sorted list does not, in general, lie near the $n$‑th position when ranked by the Machian gravity acceleration scale. The figure indicates that, for many galaxies, these rankings 
+          can differ substantially. In the bottom panel, I present the analogous comparison but with the bar height representing the Machian gravity acceleration scale and the color encoding the MOND 
+          acceleration scale. Computing the median accelerations, we find that the median value of $a^\text{MOND}$ is roughly an order of magnitude smaller than the corresponding median of $a^\text{MG}$, 
+          in agreement with Eq.~\ref{Eq:MONDBreaking}.
+        </p>
       </section>
 
       <section style="margin-top:12px">
